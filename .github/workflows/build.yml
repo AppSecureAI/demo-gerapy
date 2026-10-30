@@ -21,14 +21,14 @@ jobs:
         python-version: [3.7, 3.8]
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@a37ce9120846195fa4ece8f58b268e6043cb2f26 # v3
     - name: Set up Poetry ${{ env.POETRY_VERSION }} with Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@7f4fc3e22c37d6ff65e88745f38bd3157c663f7c # v4
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install poetry
       # see https://github.com/marketplace/actions/setup-poetry
-      uses: Gr1N/setup-poetry@v7
+      uses: Gr1N/setup-poetry@09236184f6c1ab47c0dc9c1001c7fe200cf2afb0 # v7
       with:
         poetry-version: ${{ env.POETRY_VERSION }}
     - name: Install dependencies
