@@ -1,5 +1,7 @@
 import django
+import logging
 import os
+import secrets
 
 from gerapy import settings
 
@@ -12,6 +14,8 @@ def initadmin():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "gerapy.server.server.settings")
     django.setup()
     from django.contrib.auth.models import User
+    from django.contrib.auth.password_validation import validate_password
+    from django.core.exceptions import ValidationError
     
     admins = User.objects.filter(is_superuser=True)
     if admins:
@@ -23,7 +27,13 @@ def initadmin():
         for user in settings.ADMINS:
             username = user
             email = '%s@gerapy.com' % username
-            password = username
+            password = secrets.token_urlsafe(32)
+            try:
+                validate_password(password, user=User(username=username, email=email))
+            except ValidationError:
+                logging.getLogger(__name__).warning('Admin password validation failed')
+                print('Admin password does not meet the configured password policy')
+                return
             admin, created = User.objects.update_or_create(email=email, username=username)
             admin.set_password(password)
             admin.is_active = True
